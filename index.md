@@ -9,20 +9,21 @@ Therefore, our project aims to construct and train a deep image classifier syste
 # Existing Work
 Several studies in recent years have explored image classification for disaster relief. Gebrehiwot et al. (2019) developed a deep CNN for flood mapping based on UAV data (similar to our dataset).[[1]](#1) Gebrehiwot reported that it took about 26 hours for cross validation using a single GPU (NVIDIA Quadro M4000). Sarker et al. (2019) developed a supervised CNN for flood mapping based on satellite images.[[2]](#2) They used a High Performance Computing (HPC) server to train their model rather than a GPU and reported a training time of 24 hours. A more recent study, Hashemi-Beni and Gebrehiwot (2021), also developed a CNN for flood labeling of images, but did not report the infrastructure used for training the model or the required training time.[[3]](#3)
 
-Instead of a fully-supervised approach as with the studies described above, we focused on building a semi-supervised model because real-world datasets are predominantly unlabelled. Our semi-supervised model is a convolutional neural network (CNN) that learns from both labeled and unlabeled images, therefore requiring a custom loss function and various data augmentations for implementation. Instead of transferring and applying a pre-trained model, we built our CNN from scratch, adapting and simplifying key components from Google's MixMatch and FixMatch algorithms.[[4]](#4),[[5]](#5) We elaborate on the specifics of our algorithm in the following section.
+Instead of a fully-supervised approach as with the studies described above, we focused on building a semi-supervised model because real-world datasets are predominantly unlabelled. Our semi-supervised model is a convolutional neural network (CNN) that learns from both labeled and unlabeled images, therefore requiring a custom loss function and various data augmentations for implementation. Instead of transferring and applying a pre-trained model, we built our CNN from scratch, adapting and simplifying key components from Google's MixMatch and FixMatch algorithms.[[4]](#4)[[5]](#5) We elaborate on the specifics of our algorithm in the following section.
 
 Additionally, it is worth noting that this work can be easily extended to other natural disasters like wildfires and debris from earthquakes. We hope this work contributes to the increasingly numerous humanitarian applications of machine learning with big compute and big data.
 
 
 # Model and Data
 ## Model
-We developed a custom semi-supervised CNN for image classification. The architecture used consists of [FILL IN WHEN FINALIZED] and is illustrated in Figure 1 below.
+We developed a custom semi-supervised CNN for image classification. The architecture used consists of [FILL IN WHEN FINALIZED] and is illustrated in **Figure 1** below.
 
+**Figure 1: CNN Architecture**
 [INSERT FIGURE 1: CNN Architecture (use AM231 PPT slide)]
 
 During training, we use the architecture described above to classify both labeled and unlabeled images as flooded (1) or nonflooded (0). For labeled images, we want the model to produce predictions that match the ground-truth labels, so we penalize the loss function when predictions do not match the true labels. With unlabeled images, we want the model to assign photos with similar features to the same class. Therefore, we augment each unlabeled image several times and penalize the model for producing different predictions across augmentations of the same image. Augmentations may include rotations, translations, reflections, or noise additions to the original photos. For consistency between the labeled and unlabeled training data, a single augmented version of each labeled photo is used in lieu of the original image.  
 
-The training process for a single mini-batch within an epoch is illustrated in Figure 2. We perform a forward pass on the augmented version of each labeled photo and the _k_ augmentations of each unlabeled photo within the batch. For the unlabeled images, a "guess" at the true label is produced by taking the mean of the model predictions for the _k_ augmentations of the same image. Model predictions are then evaluated using cross entropy with the true label (for the labeled data) or the L_2 loss with the guess label (for the unlabeled data). Total loss for the batch is the sum of the labeled loss with the unlabeled loss, where the unlabeled loss is weighted by a constant.
+The training process for a single mini-batch within an epoch is illustrated in **Figure 2**. We perform a forward pass on the augmented version of each labeled photo and the _k_ augmentations of each unlabeled photo within the batch. For the unlabeled images, a "guess" at the true label is produced by taking the mean of the model predictions for the _k_ augmentations of the same image. Model predictions are then evaluated using cross entropy with the true label (for the labeled data) or the L_2 loss with the guess label (for the unlabeled data). Total loss for the batch is the sum of the labeled loss with the unlabeled loss, where the unlabeled loss is weighted by a constant.
 
 For training, we use the Adam optimizer with a learning rate of 0.001 and XXX epochs.
 
@@ -33,7 +34,7 @@ For training, we use the Adam optimizer with a learning rate of 0.001 and XXX ep
 
 
 ## Data
-The dataset used comes from the Floodnet Challenge [[6]](#6), with approximately 2,300 quadcopter or drone images of land from post-Hurricane Harvey. The data is segmented into 60% training, 20% validation and 20% testing sets. Of the training set, 25% is labeled (approximately 400 out of 1,400 images). Examples of a non-flooded and flooded image are shown in Figure 3. These images are of high resolution, 3000 by 4000 pixels, and hence are reduced to 1000 by 750 pixels for more efficient training and memory management.
+The dataset used comes from the Floodnet Challenge [[6]](#6), with approximately 2,300 quadcopter or drone images of land from post-Hurricane Harvey. The data is segmented into 60% training, 20% validation and 20% testing sets. Of the training set, 25% is labeled (approximately 400 out of 1,400 images). Examples of a non-flooded and flooded image are shown in **Figure 3**. These images are of high resolution, 3000 by 4000 pixels, and hence are reduced to 1000 by 750 pixels for more efficient training and memory management.
 
 **Figure 3: Example Images for Classification**
 ![](figs/fig3.png =348x600)
@@ -44,7 +45,7 @@ For training, we subset the images to create a balanced set of [FILL IN SPECIFIC
 # Parallel Application, Programming Models, Platform and Infrastructure
 Training convolutional neural networks is highly computationally intensive due to the many intermediate calculations required at each point in the architecture. In our situation, this issue is exacerbated by the high quality resolution of our images, which inherently increases the problem size at every intermediate step. Fortunately, matrix multiplication, convolutions, and pooling are all highly parallelizable tasks, and for this reason we relied on accelerated computing with a GPU to speed up the training and evaluation process for our model. This constitutes procedure-level parallelization as we are parallelizing regions of code within a task and thus falls in the external, fine-grained domain of Big Compute.
 
-We evaluate performance by training our model several times using increasingly powerful instances of a single GPU on AWS. All configurations relied on Ubuntu 18.04 with the AWS Deep Learning AMI. Table 1 includes a list of each configuration with additional details. We relied on Python (specifically Tensorflow) to build our CNN. Additionally, images are stored in an S3 bucket, also on AWS. 
+We evaluate performance by training our model several times using increasingly powerful instances of a single GPU on AWS. All configurations relied on Ubuntu 18.04 with the AWS Deep Learning AMI. **Table 1** includes a list of each configuration with additional details. We relied on Python (specifically Tensorflow) to build our CNN. Additionally, images are stored in an S3 bucket, also on AWS. 
 
 [INSERT TABLE 1: List of GPU instances used - maybe add configuration details]
 
