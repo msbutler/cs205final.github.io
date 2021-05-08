@@ -37,7 +37,7 @@ For training, we use the Adam optimizer with a learning rate of 0.001 and XXX ep
 The dataset used comes from the Floodnet Challenge [[6]](#6), with approximately 2,300 quadcopter or drone images of land from post-Hurricane Harvey. The data is segmented into 60% training, 20% validation and 20% testing sets. Of the training set, 25% is labeled (approximately 400 out of 1,400 images). Examples of a non-flooded and flooded image are shown in **Figure 3**. These images are of high resolution, 3000 by 4000 pixels, and hence are reduced to 1000 by 750 pixels for more efficient training and memory management.
 
 **Figure 3: Example Images for Classification**
-![](figs/fig3.png =348x600)
+![](figs/fig3.png)
 
 For training, we subset the images to create a balanced set of [FILL IN SPECIFICS ABOUT # OF IMAGES, BALANCED/UNBALANCED, ETC].
 
