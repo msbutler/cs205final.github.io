@@ -1,4 +1,4 @@
-Codebase[https://github.com/msbutler/cs205final]
+**Codebase:** [https://github.com/msbutler/cs205final](https://github.com/msbutler/cs205final)
 
 # Problem Statement
 Climate change has brought about increasingly frequent natural disasters, including flooding, thereby threatening human lives and infrastructure amongst others. Access to accurate and identifiable visual data is extremely instrumental for a directed and efficient relief response. The proliferation of unmanned aerial systems (UAS) with inexpensive sensors has led to a host of high resolution images but the main challenge of analysing these images on a high-frequency and real-time basis with high accuracy still stands. 
@@ -28,20 +28,20 @@ For training, we use the Adam optimizer with a learning rate of 0.001 and XXX ep
 
 [FILL IN NUMBER OF EPOCHS in last sentence]
 
-Figure 2: Outline of Model Training for One Batch/Epoch
+**Figure 2: Outline of Model Training for One Batch/Epoch**
 ![](figs/fig2.png)
 
 
 ## Data
 The dataset used comes from the Floodnet Challenge [[6]](#6), with approximately 2,300 quadcopter or drone images of land from post-Hurricane Harvey. The data is segmented into 60% training, 20% validation and 20% testing sets. Of the training set, 25% is labeled (approximately 400 out of 1,400 images). Examples of a non-flooded and flooded image are shown in Figure 3. These images are of high resolution, 3000 by 4000 pixels, and hence are reduced to 1000 by 750 pixels for more efficient training and memory management.
 
-Figure 3: Examples of Images for Classification
-![](figs/fig3.png)
+**Figure 3: Example Images for Classification**
+![](figs/fig3.png =348x600)
 
 For training, we subset the images to create a balanced set of [FILL IN SPECIFICS ABOUT # OF IMAGES, BALANCED/UNBALANCED, ETC].
 
 
-# Parallel application, programming models, platform and infrastructure
+# Parallel Application, Programming Models, Platform and Infrastructure
 Training convolutional neural networks is highly computationally intensive due to the many intermediate calculations required at each point in the architecture. In our situation, this issue is exacerbated by the high quality resolution of our images, which inherently increases the problem size at every intermediate step. Fortunately, matrix multiplication, convolutions, and pooling are all highly parallelizable tasks, and for this reason we relied on accelerated computing with a GPU to speed up the training and evaluation process for our model. This constitutes procedure-level parallelization as we are parallelizing regions of code within a task and thus falls in the external, fine-grained domain of Big Compute.
 
 We evaluate performance by training our model several times using increasingly powerful instances of a single GPU on AWS. All configurations relied on Ubuntu 18.04 with the AWS Deep Learning AMI. Table 1 includes a list of each configuration with additional details. We relied on Python (specifically Tensorflow) to build our CNN. Additionally, images are stored in an S3 bucket, also on AWS. 
@@ -49,7 +49,7 @@ We evaluate performance by training our model several times using increasingly p
 [INSERT TABLE 1: List of GPU instances used - maybe add configuration details]
 
 
-# Software design
+# Software Design
 Technical description of the software design, code baseline, dependencies, how to use the code, and system and environment needed to reproduce tests
 
 As mentioned above, our model is built in Python primarily using `tensorflow`. We also rely on the `os` package for reading in data; `skimage`, `random`, and `PIL` for image analysis; `numpy` for additional data analysis; and `matplotlib` for plotting our results. Each of these packages comes pre-installed with the AWS Deep Learning AMI. Replication information for producing the same environment and package versions used in our tests is included in the `Replication.md` instructions file on the Github (see Codebase link above).   
