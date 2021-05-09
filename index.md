@@ -16,7 +16,7 @@ Additionally, it is worth noting that this work can be easily extended to other 
 
 # Model and Data
 ## Model
-We developed a custom semi-supervised CNN for image classification. The architecture used consists of [FILL IN WHEN FINALIZED] and is illustrated in **Figure 1** below.
+We developed a custom semi-supervised CNN for image classification. The architecture used first consists of 3 convolutional layers with ReLU activation function, batch normalization and max-pooling. The first convolutional layer has a 25 by 25 kernel size and stride length of 10, which is intentionally made relatively larger than the following layers in order to capture broader trends and patterns of the original image. The second and third convolutional layers have a 5 by 5 kernel size and stride length of 2. All convolutional layers have a max-pooling kernel size of 2 by 2 and batch normalization is employed in each layer to tackle the issue of internal covariate shift when the distribution of each layer's inputs changes during training due to back-propagated parameter updates. Thereafter, the output of the third convolutional layer is flattened and passed to a fully connected layer with an intermediate output size of 64 before a ReLU activation function. Finally, the last layer is another fully connected layer with the final output size of 1 before a Sigmoid activation function, pushing the classification to be boolean corresponding to either a non-flooded or flooded image. This architecture is illustrated in **Figure 1** below.
 
 **Figure 1: CNN Architecture**
 ![](figs/fig1.png)
@@ -68,7 +68,9 @@ Our code structure is as follows:
 
 
 # Performance Evaluation
-Performance evaluation (speed-up, throughput, weak and strong scaling) and discussion about overheads and optimizations done
+We have conducted 2 broad tests to evaluate both weak and strong scaling for our deep classifier. Firstly, weak scaling is tested by increasing the training and testing data as a proxy of the problem increasing proportionally to the number of processors or processing power. Using a g3.8xlarge instance with 2 GPUs, both supervised and semi-supervised versions of the classifier are trained over 5 iterations to generate average training times for 25\%, 50\%, 75\% and 100\% of the dataset (both labeled and unlabeled). Secondly, strong scaling is tested by training the algorithm on the full dataset and varying the number of GPUs used on a g3.8xlarge instance by having Tensorflow interface with CUDA, setting CUDA_VISIBLE_DEVICES to different lists of GPU devices as mentioned in earlier sections. Computational times from strong scaling experiments will indicate the speedup of increasing number of processors while fixing the problem size.
+
+Several optimizations were conducted for the parallelization process, including reducing the image resolution size and varying the optimal batch size to fit within the GPU memory as training on the original high-definition images led to various memory issues on the GPU. Nevertheless, there are numerous overheads when training on the GPU and hence, the theoretical speed-up or perfect scaling where computational time decreases linearly with lower training data or generally decreases with more GPUs is not expected. The main overhead for GPU-accelerated computing is the data transfer between the CPU and GPU, where most matrix multiplications and convolutions are conducted within the GPUs. Moreover, it is noteworthy that GPU acceleration is only most effective for data parallelization which is suitable in our implementation of weak scaling but is not optimal for speeding up more complex or deeper neural network architectures.
 
 
 # Discussion
