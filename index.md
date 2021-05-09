@@ -41,19 +41,23 @@ Our training set consists of [FILL IN SPECIFICS ABOUT # OF IMAGES, BALANCED/UNBA
 
 
 # Parallel Application, Programming Models, Platform and Infrastructure
-Training convolutional neural networks is highly computationally intensive due to the many intermediate calculations required at each point in the architecture. In our situation, this issue is exacerbated by the high quality resolution of our images, which inherently increases the problem size at every intermediate step. Fortunately, matrix multiplication, convolutions, and pooling are all highly parallelizable tasks, and for this reason we relied on accelerated computing with a GPU to speed up the training and evaluation process for our model. This constitutes procedure-level parallelization as we are parallelizing regions of code within a task and thus falls in the external, fine-grained domain of Big Compute.
+Training convolutional neural networks is highly computationally intensive due to the many intermediate calculations required at each point of the architecture. In our situation, this issue is exacerbated by the high quality resolution of our images, which inherently increases the problem size at every intermediate step. Fortunately, matrix multiplication, convolutions, and pooling are all highly parallelizable tasks, and for this reason we relied on accelerated computing with a GPU to speed up the training and evaluation process for our model. This constitutes procedure-level parallelization as we are parallelizing regions of code within a task and thus falls in the external, fine-grained domain of Big Compute.
 
-We evaluate performance by training our model several times using increasingly powerful instances of a single GPU on AWS. All configurations relied on Ubuntu 18.04 with the AWS Deep Learning AMI. **Table 1** includes a list of each configuration with additional details. We relied on Python (specifically Tensorflow) to build our CNN. Additionally, images are stored in an S3 bucket, also on AWS. 
+We evaluate performance by training our model on an AWS GPU. Specifically, we use a g3.8xlarge instance with Ubuntu 18.04 and the AWS Deep Learning AMI which pre-configures commonly used machine learning packages into different virtual environments. **Table 1** includes additional details about the configuration. Python (specifically `Tensorflow`) encodes our CNN and controls the hardware. Certain operations in `Tensorflow` (i.e., Matmul for matrix multiplication) include both CPU and a GPU implmentations "under the hood". If running code on a GPU, `Tensorflow` automatically prioritizes the GPU implementation of the operation. We control the number of GPUs visible to CUDA (and therefore, `Tensorflow`) by setting the enviornment variable `CUDA_VISIBLE_DEVICES` to the desired GPU IDs using the `os` package.
 
-[add in interacting with CUDA]
+**Table 1: GPU Configuration Details**<br/>
+[INSERT TABLE 1: Configuration details for g3 instance used] 
+<br/>Note: AWS unfortunately did not grant us a limit increase needed to use the next largest g3 instance with four GPUs (we reached out again and still have not heard back from their support). 
 
-[INSERT TABLE 1: List of GPU instances used - maybe add configuration details]
+Additionally, images are stored in an S3 bucket, also on AWS.
 
 
 # Software Design
 Technical description of the software design, code baseline, dependencies, how to use the code, and system and environment needed to reproduce tests
 
-As mentioned above, our model is built in Python primarily using `tensorflow`. We also rely on the `os` package for reading in data; `skimage`, `random`, and `PIL` for image analysis; `numpy` for additional data analysis; and `matplotlib` for plotting our results. Each of these packages comes pre-installed with the AWS Deep Learning AMI. Replication information for producing the same environment with the same package versions used in our tests is included in the `Replication.md` instructions file on the Github (see Codebase link above).   
+As mentioned above, our model is built in Python primarily using `tensorflow`. We also rely on the `os` package for reading in data; `skimage`, `random`, and `PIL` for image analysis; `numpy` for additional data analysis; and `matplotlib` for plotting our results. Each of these packages comes pre-installed with the AWS Deep Learning AMI. Replication information for producing the same environment with the same package versions used in our tests is included in the `Replication.md` instructions file on the Github (see Codebase link above).  **Table 2** also includes version information.
+
+[INSERT TABLE 2: version info for packages]
 
 Our code structure is as follows:
 - `Train/`:  folder with subdirectories for labeled and unlabeled training data
