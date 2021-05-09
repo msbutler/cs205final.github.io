@@ -83,9 +83,15 @@ Several optimizations were conducted for the parallelization process, including 
 
 
 # Discussion
-Firstly, we note that time to convergence is significantly higher when not using a pre-trained model, as described in the aforementioned sections. Based on the current architecture, the model for both the fully supervised and semi-supervised approaches have yet to converge with mediocre training and testing accuracies after 1000 iterations, taking more than 3h on a g3.8xlarge instance, especially since most deep classifiers require thousands of iterations for convergence from scratch. We have also experimented with a more balanced dataset by restricting the number of labeled flooded and non-flooded images to be the same. Nevertheless, we did achieve significant results with a more simplified architecture (3 convolutional layers with kernel size of 5 by 5 and reducing the number of channels along the layers) where testing accuracy reaches a peak of around 80% after 200 iterations on a balanced dataset with baseline random accuracy of 50%.
+Firstly, we note that time to convergence is significantly higher when not using a pre-trained model, as described in the aforementioned sections. Based on the current architecture, the model for both the fully-supervised and semi-supervised approaches have yet to converge with mediocre training and testing accuracies after 1000 iterations, taking more than 3h on a g3.8xlarge instance, especially since most deep classifiers require thousands of iterations for convergence from scratch. We have also experimented with a more balanced dataset by restricting the number of labeled flooded and non-flooded images to be the same. Notably, we did achieve significant results on the fully-supervised model with a more simplified architecture (3 convolutional layers with kernel size of 5 by 5 and reducing the number of channels along the layers) where testing accuracy reaches a peak of around 80% after 200 iterations on a balanced dataset with baseline random accuracy of 50%.
 
-Secondly, 
+Secondly, the weak scaling experiments for both fully- and semi-supervised models corroborate the hypothesis that computational time increases with the data size for both training and testing as shown in **Figures 4 and 5** below. 
+
+**Figure 4: Weak Scaling for Fully-Supervised Model**<br/>
+![](figs/fig4.png)
+
+**Figure 5: Weak Scaling for Semi-Supervised Model**<br/>
+![](figs/fig5.png)
 
 goals achieved, improvements suggested, lessons learnt, future work, interesting insights
 
