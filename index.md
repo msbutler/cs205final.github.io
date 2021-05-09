@@ -46,10 +46,10 @@ Training convolutional neural networks is highly computationally intensive due t
 We evaluate performance by training our model on an AWS GPU. Specifically, we use a g3.8xlarge instance with Ubuntu 18.04 and the AWS Deep Learning AMI which pre-configures commonly used machine learning packages into different virtual environments. **Table 1** includes additional details about the configuration. Python (specifically `Tensorflow`) encodes our CNN and controls the hardware. Certain operations in `Tensorflow` (i.e., Matmul for matrix multiplication) include both CPU and a GPU implmentations "under the hood". If running code on a GPU, `Tensorflow` automatically prioritizes the GPU implementation of the operation. We control the number of GPUs visible to CUDA (and therefore, `Tensorflow`) by setting the enviornment variable `CUDA_VISIBLE_DEVICES` to the desired GPU IDs using the `os` package.
 
 **Table 1: GPU Configuration Details**<br/>
-[INSERT TABLE 1: Configuration details for g3 instance used] 
+![](figs/aws_g_table.png)
 <br/>Note: AWS unfortunately did not grant us a limit increase needed to use the next largest g3 instance with four GPUs (we reached out again and still have not heard back from their support). 
 
-Additionally, images are stored in an S3 bucket, also on AWS.
+We have also initially experimented with storing all the images on a AWS S3 bucket but transitioned to downsizing the image resolution and storing it on GitHub due to GPU memory optimization as will be discussed in later sections.
 
 
 # Software Design
