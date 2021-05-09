@@ -19,7 +19,7 @@ Additionally, it is worth noting that this work can be easily extended to other 
 We developed a custom semi-supervised CNN for image classification. The architecture used consists of [FILL IN WHEN FINALIZED] and is illustrated in **Figure 1** below.
 
 **Figure 1: CNN Architecture**
-[INSERT FIGURE 1: CNN Architecture (use AM231 PPT slide)]
+![](figs/fig1.png)
 
 During training, we use the architecture described above to classify both labeled and unlabeled images as flooded (1) or nonflooded (0). For labeled images, we want the model to produce predictions that match the ground-truth labels, so we penalize the loss function when predictions do not match the true labels. With unlabeled images, we want the model to assign photos with similar features to the same class. Therefore, we augment each unlabeled image several times and penalize the model for producing different predictions across augmentations of the same image. Augmentations may include rotations, translations, reflections, or noise additions to the original photos. For consistency between the labeled and unlabeled training data, a single augmented version of each labeled photo is used in lieu of the original image.  
 
