@@ -71,7 +71,9 @@ Our code is structured as follows:
 - `supervised.py`:  specifies training methodology for the fully supervised model
 - `utils.py`:  contains functions for image analysis and developing training/testing sets
 
-Additionally, [NOTEBOOKS?]
+MOVE NOTEBOOKS
+ADD COMMENT ON TABLE 1
+ADD COMMENT ABOUT DIFFERENT SCALING IN PERFORMANCE EVAL FOR SEMISUPERVISED DUE TO MEMORY ISSUES
 
 
 # Performance Evaluation
@@ -84,6 +86,9 @@ Several optimizations were conducted for the parallelization process, including 
 goals achieved, improvements suggested, lessons learnt, future work, interesting insights
 
 future work: Use Tensorboard for GPU analysis...
+
+semisupervised weak scaling for [0.1,0.2,0.3,0.5] % of total dataset: 
+Weak Scaling Times: [6.167605590820313, 18.977311420440675, 40.378678464889525, 100.61357822418213]
 
 
 # Citations
@@ -104,46 +109,3 @@ Kihyuk Sohn et al. "Fixmatch: Simplifying semi-supervised learning with consiste
 
 <a id="6">[6]</a> 
 _IEEE Earth Vision 2021 Floodnet Challenge_. [http://www.classic.grss- ieee.org/earthvision2021/challenge.html](http://www.classic.grss- ieee.org/earthvision2021/challenge.html). Accessed: 2021-04-01.
-
-
-
-
-Template Stuff:
-
-## Welcome to GitHub Pages
-
-You can use the [editor on GitHub](https://github.com/msbutler/cs205final.github.io/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Overview
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/msbutler/cs205final.github.io/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
