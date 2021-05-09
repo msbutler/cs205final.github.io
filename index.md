@@ -99,7 +99,7 @@ supervised weak scaling for [0.25,05,0.75,1] % of total dataset:
 Weak Scaling Times: [15.263715124130249, 55.22982926368714, 121.37289776802064, 211.65460567474366]
 
 supervised strong scaling for [0,1,2] GPUs:
-Strong Scaling Times: [222.83952345848084, 211.32166829109192, 
+Strong Scaling Times: [222.83952345848084, 211.32166829109192, 220.4881784915924]
 
 semisupervised weak scaling for [0.1,0.2,0.3,0.5] % of total dataset: 
 Weak Scaling Times: [6.167605590820313, 18.977311420440675, 40.378678464889525, 100.61357822418213]
