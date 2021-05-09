@@ -25,21 +25,19 @@ During training, we use the architecture described above to classify both labele
 
 The training process for a single mini-batch within an epoch is illustrated in **Figure 2**. We perform a forward pass on the augmented version of each labeled photo and the _k_ augmentations of each unlabeled photo within the batch. For the unlabeled images, a "guess" at the true label is produced by taking the mean of the model predictions for the _k_ augmentations of the same image. Model predictions are then evaluated using cross entropy with the true label (for the labeled data) or the L_2 loss with the guess label (for the unlabeled data). Total loss for the batch is the sum of the labeled loss with the unlabeled loss, where the unlabeled loss is weighted by a constant.
 
-For training, we use the Adam optimizer with a learning rate of 0.001 and XXX epochs.
-
-[FILL IN NUMBER OF EPOCHS in last sentence]
+For training, we use the Adam optimizer with a learning rate of 0.001 and 500 epochs.
 
 **Figure 2: Outline of Model Training for One Batch/Epoch**
 ![](figs/fig2.png)
 
 
 ## Data
-The dataset used comes from the Floodnet Challenge [[6]](#6), with approximately 2,300 quadcopter or drone images of land from post-Hurricane Harvey. The data is segmented into 60% training, 20% validation and 20% testing sets. Of the training set, 25% is labeled (approximately 400 out of 1,400 images). Examples of a non-flooded and flooded image are shown in **Figure 3**. These images are of high resolution, 3000 by 4000 pixels, and hence are reduced to 1000 by 750 pixels for more efficient training and memory management.
+The dataset used comes from the Floodnet Challenge [[6]](#6), with approximately 2,300 quadcopter or drone images of land from post-Hurricane Harvey. The data is segmented into 60% training, 20% validation and 20% testing sets. Of the training set, 25% is labeled (approximately 400 out of 1,400 images). Examples of a non-flooded and flooded image are shown in **Figure 3**. These images are of high resolution, 3000 by 4000 pixels, and hence are reduced to 750 by 1000 pixels for more efficient training and memory management.
 
 **Figure 3: Example Images for Classification**<br/>
 ![](figs/fig3.png)
 
-For training, we subset the images to create a balanced set of [FILL IN SPECIFICS ABOUT # OF IMAGES, BALANCED/UNBALANCED, ETC].
+Our training set consists of [FILL IN SPECIFICS ABOUT # OF IMAGES, BALANCED/UNBALANCED, LABELED/UNLABELED ETC].
 
 
 # Parallel Application, Programming Models, Platform and Infrastructure
@@ -47,34 +45,32 @@ Training convolutional neural networks is highly computationally intensive due t
 
 We evaluate performance by training our model several times using increasingly powerful instances of a single GPU on AWS. All configurations relied on Ubuntu 18.04 with the AWS Deep Learning AMI. **Table 1** includes a list of each configuration with additional details. We relied on Python (specifically Tensorflow) to build our CNN. Additionally, images are stored in an S3 bucket, also on AWS. 
 
+[add in interacting with CUDA]
+
 [INSERT TABLE 1: List of GPU instances used - maybe add configuration details]
 
 
 # Software Design
 Technical description of the software design, code baseline, dependencies, how to use the code, and system and environment needed to reproduce tests
 
-As mentioned above, our model is built in Python primarily using `tensorflow`. We also rely on the `os` package for reading in data; `skimage`, `random`, and `PIL` for image analysis; `numpy` for additional data analysis; and `matplotlib` for plotting our results. Each of these packages comes pre-installed with the AWS Deep Learning AMI. Replication information for producing the same environment and package versions used in our tests is included in the `Replication.md` instructions file on the Github (see Codebase link above).   
+As mentioned above, our model is built in Python primarily using `tensorflow`. We also rely on the `os` package for reading in data; `skimage`, `random`, and `PIL` for image analysis; `numpy` for additional data analysis; and `matplotlib` for plotting our results. Each of these packages comes pre-installed with the AWS Deep Learning AMI. Replication information for producing the same environment with the same package versions used in our tests is included in the `Replication.md` instructions file on the Github (see Codebase link above).   
 
 Our code structure is as follows:
-- file1: description
-- file2: description
+- `Train/`:  folder with subdirectories for labeled and unlabeled training data
+- `Figures/`:  folder containing results from performance tests
+- `architecture.py`:  defines CNN architecture
+- `config.py`:  configures image dimensions and 
 
-Additionally, we rely on Tensorboard for GPU analysis...
-[HOW TO USE TENSORBOARD - LINK TO TUTORIAL AS PART OF DESCRIPTION?]
 
 
 # Performance Evaluation
 Performance evaluation (speed-up, throughput, weak and strong scaling) and discussion about overheads and optimizations done
 
 
-# Advanced Features
-Description of advanced features like models/platforms not explained in class, advanced functions of modules, techniques to mitigate overheads, challenging parallelization or implementation aspects...
-
-[TENSORBOARD USE]
-
-
 # Discussion
 goals achieved, improvements suggested, lessons learnt, future work, interesting insights
+
+future work: Use Tensorboard for GPU analysis...
 
 
 # Citations
