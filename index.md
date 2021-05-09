@@ -53,24 +53,31 @@ Additionally, images are stored in an S3 bucket, also on AWS.
 
 
 # Software Design
-Technical description of the software design, code baseline, dependencies, how to use the code, and system and environment needed to reproduce tests
+**Codebase:** [https://github.com/msbutler/cs205final](https://github.com/msbutler/cs205final)
 
 As mentioned above, our model is built in Python primarily using `tensorflow`. We also rely on the `os` package for reading in data; `skimage`, `random`, and `PIL` for image analysis; `numpy` for additional data analysis; and `matplotlib` for plotting our results. Each of these packages comes pre-installed with the AWS Deep Learning AMI. Replication information for producing the same environment with the same package versions used in our tests is included in the `Replication.md` instructions file on the Github (see Codebase link above).  **Table 2** also includes version information.
 
+**Table 2: Software Package Version Information**<br/>
 [INSERT TABLE 2: version info for packages]
 
-Our code structure is as follows:
+Our code is structured as follows:
 - `Train/`:  folder with subdirectories for labeled and unlabeled training data
 - `Figures/`:  folder containing results from performance tests
 - `architecture.py`:  defines CNN architecture
-- `config.py`:  configures image dimensions and 
+- `config.py`:  configures data parameters (i.e., image resize dimensions)
+- `performance.py`:  script for running weak and strong performance tests (outlined in the next section)
+- `run.py`:  trains one instance of the supervised or semisupervised model
+- `semisupervised.py`:  specifies training methodology for the semisupervised model
+- `supervised.py`:  specifies training methodology for the fully supervised model
+- `utils.py`:  contains functions for image analysis and developing training/testing sets
 
+Additionally, [NOTEBOOKS?]
 
 
 # Performance Evaluation
 We have conducted 2 broad tests to evaluate both weak and strong scaling for our deep classifier. Firstly, weak scaling is tested by increasing the training and testing data as a proxy of the problem increasing proportionally to the number of processors or processing power. Using a g3.8xlarge instance with 2 GPUs, both supervised and semi-supervised versions of the classifier are trained over 5 iterations to generate average training times for 25\%, 50\%, 75\% and 100\% of the dataset (both labeled and unlabeled). Secondly, strong scaling is tested by training the algorithm on the full dataset and varying the number of GPUs used on a g3.8xlarge instance by having Tensorflow interface with CUDA, setting CUDA_VISIBLE_DEVICES to different lists of GPU devices as mentioned in earlier sections. Computational times from strong scaling experiments will indicate the speedup of increasing number of processors while fixing the problem size.
 
-Several optimizations were conducted for the parallelization process, including reducing the image resolution size and varying the optimal batch size to fit within the GPU memory as training on the original high-definition images led to various memory issues on the GPU. Nevertheless, there are numerous overheads when training on the GPU and hence, the theoretical speed-up or perfect scaling where computational time decreases linearly with lower training data or generally decreases with more GPUs is not expected. The main overhead for GPU-accelerated computing is the data transfer between the CPU and GPU, where most matrix multiplications and convolutions are conducted within the GPUs. Moreover, it is noteworthy that GPU acceleration is only most effective for data parallelization which is suitable in our implementation of weak scaling but is not optimal for speeding up more complex or deeper neural network architectures.
+Several optimizations were conducted for the parallelization process, including reducing the image resolution size and varying the optimal batch size to fit within the GPU memory as training on the original high-definition images led to various memory issues on the GPU. Nevertheless, there are numerous overheads when training on the GPU and hence, the theoretical speed-up or perfect scaling where computational time decreases linearly with lower training data or generally decreases with more GPUs is not expected. The main overhead for GPU-accelerated computing is the data transfer between the CPU and GPU, where most matrix multiplications and convolutions are conducted within the GPUs. Moreover, it is noteworthy that GPU acceleration is most effective for data parallelization which is suitable in our implementation of weak scaling but is not optimal for speeding up more complex or deeper neural network architectures.
 
 
 # Discussion
