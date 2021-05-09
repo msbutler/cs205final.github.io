@@ -37,7 +37,7 @@ The dataset used comes from the Floodnet Challenge [[6]](#6), with approximately
 **Figure 3: Example Images for Classification**<br/>
 ![](figs/fig3.png)
 
-Our data set consists of 51 labelled flooded images, 347 labelled unflooded images, and 398 unlabelled data. We used 80% from each dataset for training.
+Our data set consists of 51 labelled flooded images, 347 labelled unflooded images, and 398 unlabelled data images. We used 80% from each subset for training.
 
 
 # Parallel Application, Programming Models, Platform and Infrastructure
