@@ -102,10 +102,6 @@ In conclusion, we have successfully implemented a deep image classifier for floo
 
 Future work entails leveraging Tensorboard for better insight into GPU analysis in terms of time spent on GPU computations, GPU-CPU communications and potentially better optimizing the allocation of computations to multiple GPUs. Moreover, it would also be worth exploring different CNN architectures or parallelizing deployment of pre-trained models for better model convergence.
 
-Time for 0 GPUs: 212.20314750671386
-Time for 1 GPUs: 202.24078855514526
-Time for 2 GPUs: 213.39440083503723
-
 
 # Citations
 <a id="1">[1]</a> 
