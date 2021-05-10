@@ -43,11 +43,11 @@ Our data set consists of 51 labelled flooded images, 347 labelled unflooded imag
 # Parallel Application, Programming Models, Platform and Infrastructure
 Training convolutional neural networks is highly computationally intensive due to the many intermediate calculations required at each point of the architecture. In our situation, this issue is exacerbated by the high quality resolution of our images, which inherently increases the problem size at every intermediate step. Fortunately, matrix multiplication, convolutions, and pooling are all highly parallelizable tasks, and for this reason we relied on accelerated computing with a GPU to speed up the training and evaluation process for our model. This constitutes procedure-level parallelization as we are parallelizing regions of code within a task and thus falls in the external, fine-grained domain of Big Compute.
 
-We evaluate performance by training our model on an AWS GPU. Specifically, we use a g3.8xlarge instance with Ubuntu 18.04 and the AWS Deep Learning AMI which pre-configures commonly used machine learning packages into different virtual environments. **Table 1** includes additional details about the configuration. Python (specifically `Tensorflow`) encodes our CNN and controls the hardware. Certain operations in `Tensorflow` (i.e., Matmul for matrix multiplication) include both CPU and a GPU implmentations "under the hood". If running code on a GPU, `Tensorflow` automatically prioritizes the GPU implementation of the operation. We control the number of GPUs visible to CUDA (and therefore, `Tensorflow`) by setting the enviornment variable `CUDA_VISIBLE_DEVICES` to the desired GPU IDs using the `os` package.
+We evaluate performance by training our model on an AWS GPU. Specifically, we use a g3.8xlarge instance with Ubuntu 18.04 and the AWS Deep Learning AMI which pre-configures commonly used machine learning packages into different virtual environments. **Table 1** includes additional details about the g3.8xlarge configuration. Python (specifically `Tensorflow`) encodes our CNN and controls the hardware. Certain operations in `Tensorflow` (i.e., Matmul for matrix multiplication) include both CPU and a GPU implmentations "under the hood". If running code on a GPU, `Tensorflow` automatically prioritizes the GPU implementation of the operation. We control the number of GPUs visible to CUDA (and therefore, `Tensorflow`) by setting the enviornment variable `CUDA_VISIBLE_DEVICES` to the desired GPU IDs using the `os` package.
 
 **Table 1: GPU Configuration Details**<br/>
 ![](figs/aws_g_table.png)
-<br/>Note: AWS unfortunately did not grant us a limit increase needed to use the next largest g3 instance with four GPUs (we reached out again and still have not heard back from their support). 
+<br/>Note: AWS unfortunately did not grant us a limit increase needed to use the next largest g3.16 instance with four GPUs (we follwed up but still have not heard back from their support). 
 
 We have also initially experimented with storing all the images on a AWS S3 bucket but transitioned to downsizing the image resolution and storing it on GitHub due to GPU memory optimization as will be discussed in later sections.
 
@@ -55,25 +55,20 @@ We have also initially experimented with storing all the images on a AWS S3 buck
 # Software Design
 **Codebase:** [https://github.com/msbutler/cs205final](https://github.com/msbutler/cs205final)
 
-As mentioned above, our model is built in Python primarily using `tensorflow`. We also rely on the `os` package for reading in data; `skimage`, `random`, and `PIL` for image analysis; `numpy` for additional data analysis; and `matplotlib` for plotting our results. Each of these packages comes pre-installed with the AWS Deep Learning AMI. Replication information for producing the same environment with the same package versions used in our tests is included in the `Replication.md` instructions file on the Github (see Codebase link above).  **Table 2** also includes version information.
-
-**Table 2: Software Package Version Information**<br/>
-[INSERT TABLE 2: version info for packages]
+As mentioned above, our model is built in Python primarily using `tensorflow`. We also rely on the `os` package for reading in data; `skimage`, `random`, and `PIL` for image analysis; `numpy` for additional data analysis; and `matplotlib` for plotting our results. Each of these packages comes pre-installed with the AWS Deep Learning AMI. Replication information for producing the same environment with the same package versions used in our tests is included in the `Replication.md` instructions file on the Github (see Codebase link above).  
 
 Our code is structured as follows:
 - `Train/`:  folder with subdirectories for labeled and unlabeled training data
 - `Figures/`:  folder containing results from performance tests
+- `_old/`:  folder containing out-of-date versions of files
 - `architecture.py`:  defines CNN architecture
 - `config.py`:  configures data parameters (i.e., image resize dimensions)
-- `performance.py`:  script for running weak and strong performance tests (outlined in the next section)
 - `run.py`:  trains one instance of the supervised or semisupervised model
 - `semisupervised.py`:  specifies training methodology for the semisupervised model
 - `supervised.py`:  specifies training methodology for the fully supervised model
+- `strong_scaling.py`:  script for running strong scaling performance tests (see next section for additional information)
+- `weak_scaling.py`:  script for running weak scaling performance tests (see next section for additional information)
 - `utils.py`:  contains functions for image analysis and developing training/testing sets
-
-MOVE NOTEBOOKS
-ADD COMMENT ON TABLE 1
-ADD COMMENT ABOUT DIFFERENT SCALING IN PERFORMANCE EVAL FOR SEMISUPERVISED DUE TO MEMORY ISSUES
 
 
 # Performance Evaluation
@@ -106,6 +101,10 @@ Thirdly, the strong scaling experiments indicated that the theoretical speed-ups
 In conclusion, we have successfully implemented a deep image classifier for flood disaster management using both a fully-supervised approach and a semi-supervised model. We have also gleaned insightful observations on the various mechanisms involved in Tensorflow's interface and interactions with accelerated GPU computing. Weak scaling is corroborated where computational times are higher along with increasing training and testing datasets. On the other hand, the results from strong scaling are different from the theoretical expectations due to significant GPU-CPU communication overheads and averaging over a small number of epochs.
 
 Future work entails leveraging Tensorboard for better insight into GPU analysis in terms of time spent on GPU computations, GPU-CPU communications and potentially better optimizing the allocation of computations to multiple GPUs. Moreover, it would also be worth exploring different CNN architectures or parallelizing deployment of pre-trained models for better model convergence.
+
+Time for 0 GPUs: 212.20314750671386
+Time for 1 GPUs: 202.24078855514526
+Time for 2 GPUs: 213.39440083503723
 
 
 # Citations
