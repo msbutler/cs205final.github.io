@@ -1,4 +1,4 @@
-# cs205final.github.io
-CS 205 Final Project on Scalable Flood Detection
+#CS 205 Final Project on Large Scale Computer Vision for Flood Disaster Management
 
-see the website by visiting: https://msbutler.github.io/cs205final.github.io/
+See the website by visiting: https://msbutler.github.io/cs205final.github.io/
+Project GitHub: https://github.com/msbutler/cs205final
