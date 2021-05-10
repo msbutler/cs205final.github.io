@@ -96,10 +96,10 @@ Secondly, the weak scaling experiments for both fully and semi-supervised models
 Thirdly, the strong scaling experiments indicated that the theoretical speed-ups were clearly not achieved, due to significant overheads from GPU-CPU communication amongst others. The average epoch time against the number of GPUs used for the fully and semi-supervised models are shown in **Figures 6 and 7** below. It is observed that using 1 GPU leads to lower average epoch time when using no GPUs, indicating that GPU acceleration speed-up outweighs the overheads. However, increasing to 2 GPUs resulted in higher average epoch time, with the semi-supervised version exceeding the time without GPUs. This could be due to better optimization in the no GPU case where tensorflow could have better leveraged the 32 vCPUs, thereby not optimally representing a baseline version without GPU. Another potential explanation to the smaller speed-up when using 1 GPU is due to the experiments only averaging across 5 epochs. The first initial epoch requires significantly more time for data transfer and optimization when using GPUs, therefore indicating that averaging over more epochs may result in higher speed-ups when using GPUs compared to the no-GPU scenario.
 
 **Figure 6: Strong Scaling for Fully-Supervised Model**<br/>
-![](figs/fig4.png)
+![](figs/fig6.png)
 
 **Figure 7: Strong Scaling for Semi-Supervised Model**<br/>
-![](figs/fig5.png)
+![](figs/fig7.png)
 
 # Conclusion and Future Work
 
