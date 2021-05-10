@@ -85,7 +85,7 @@ Several optimizations were conducted for the parallelization process, including 
 # Discussion
 Firstly, we note that time to convergence is significantly higher when not using a pre-trained model, as described in the aforementioned sections. Based on the current architecture, the model for both the fully-supervised and semi-supervised approaches have yet to converge with mediocre training and testing accuracies after 1000 iterations, taking more than 3h on a g3.8xlarge instance, especially since most deep classifiers require thousands of iterations for convergence from scratch. We have also experimented with a more balanced dataset by restricting the number of labeled flooded and non-flooded images to be the same. Notably, we did achieve significant results on the fully-supervised model with a more simplified architecture (3 convolutional layers with kernel size of 5 by 5 and reducing the number of channels along the layers) where testing accuracy reaches a peak of around 80% after 200 iterations on a balanced dataset with baseline random accuracy of 50%.
 
-Secondly, the weak scaling experiments for both fully- and semi-supervised models corroborate the hypothesis that computational time increases with the data size for both training and testing as shown in **Figures 4 and 5** below. 
+Secondly, the weak scaling experiments for both fully and semi-supervised models corroborate the hypothesis that computational time increases with the data size for both training and testing as shown in **Figures 4 and 5** below where the average epoch time (across 5 epochs) is plotted against the fraction of dataset used for training and testing. The fraction of dataset used for the semi-supervised model is half (10%, 20%, 30%, 50% of total dataset) of that used by the fully-supervised version (25%, 50%, 75%, 100% of total dataset) for computational time experiment purposes since the number of unlabeled images are more than the labeled images. 
 
 **Figure 4: Weak Scaling for Fully-Supervised Model**<br/>
 ![](figs/fig4.png)
@@ -93,16 +93,21 @@ Secondly, the weak scaling experiments for both fully- and semi-supervised model
 **Figure 5: Weak Scaling for Semi-Supervised Model**<br/>
 ![](figs/fig5.png)
 
+Thirdly, the strong scaling experiments indicated that the theoretical speed-ups were clearly not achieved, due to significant overheads from GPU-CPU communication amongst others. The average epoch time against the number of GPUs used for the fully and semi-supervised models are shown in **Figures 6 and 7** below. It is observed that using 1 GPU leads to lower average epoch time when using no GPUs, indicating that GPU acceleration speed-up outweighs the overheads. However, increasing to 2 GPUs resulted in higher average epoch time, with the semi-supervised version exceeding the time without GPUs. This could be due to better optimization in the no GPU case where tensorflow could have better leveraged the 32 vCPUs, thereby not optimally representing a baseline version without GPU. Another potential explanation to the smaller speed-up when using 1 GPU is due to the experiments only averaging across 5 epochs. The first initial epoch requires significantly more time for data transfer and optimization when using GPUs, therefore indicating that averaging over more epochs may result in higher speed-ups when using GPUs compared to the no-GPU scenario.
+
+**Figure 6: Strong Scaling for Fully-Supervised Model**<br/>
+![](figs/fig4.png)
+
+**Figure 7: Strong Scaling for Semi-Supervised Model**<br/>
+![](figs/fig5.png)
+
+# Conclusion and Future Work
+
+In conclusion, 
+
 goals achieved, improvements suggested, lessons learnt, future work, interesting insights
 
-supervised weak scaling for [0.25,05,0.75,1] % of total dataset:
-Weak Scaling Times: [15.263715124130249, 55.22982926368714, 121.37289776802064, 211.65460567474366]
 
-supervised strong scaling for [0,1,2] GPUs:
-Strong Scaling Times: [222.83952345848084, 211.32166829109192, 220.4881784915924]
-
-semisupervised weak scaling for [0.1,0.2,0.3,0.5] % of total dataset: 
-Weak Scaling Times: [6.167605590820313, 18.977311420440675, 40.378678464889525, 100.61357822418213]
 
 future work: Use Tensorboard for GPU analysis...
 
