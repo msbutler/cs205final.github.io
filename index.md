@@ -16,7 +16,7 @@ Additionally, it is worth noting that this work can be easily extended to other 
 
 # Model and Data
 ## Model
-We developed a custom semi-supervised CNN for image classification. The architecture used first consists of 3 convolutional layers with ReLU activation function, batch normalization and max-pooling. The first convolutional layer has a 25 by 25 kernel size and stride length of 10, which is intentionally made relatively larger than the following layers in order to capture broader trends and patterns of the original image. The second and third convolutional layers have a 5 by 5 kernel size and stride length of 2. All convolutional layers have a max-pooling kernel size of 2 by 2 and batch normalization is employed in each layer to tackle the issue of internal covariate shift when the distribution of each layer's inputs changes during training due to back-propagated parameter updates. Thereafter, the output of the third convolutional layer is flattened and passed to a fully connected layer with an intermediate output size of 64 before a ReLU activation function. Finally, the last layer is another fully connected layer with the final output size of 1 before a Sigmoid activation function, pushing the classification to be boolean corresponding to either a non-flooded or flooded image. This architecture is illustrated in **Figure 1** below.
+We developed a custom semi-supervised CNN for image classification. The architecture used first consists of 3 convolutional layers with ReLU activation function, batch normalization and max-pooling. The first convolutional layer has a 25 by 25 kernel size and stride length of 10, which is intentionally made relatively larger than the following layers in order to capture broader trends and patterns of the original image. The number of channels increase from 3 (original RGB) to 16. The second and third convolutional layers have a 5 by 5 kernel size and stride length of 2. The second layer maintains the same number of channels while the third layer increases to 32 channels. All convolutional layers have a max-pooling kernel size of 2 by 2 and batch normalization is employed in each layer to tackle the issue of internal covariate shift when the distribution of each layer's inputs changes during training due to back-propagated parameter updates. Thereafter, the output of the third convolutional layer is flattened and passed to a fully connected layer with an intermediate output size of 64 before a ReLU activation function. Finally, the last layer is another fully connected layer with the final output size of 1 before a Sigmoid activation function, pushing the classification to be boolean corresponding to either a non-flooded or flooded image. This architecture is illustrated in **Figure 1** below.
 
 **Figure 1: CNN Architecture**
 ![](figs/fig1.png)
@@ -78,12 +78,34 @@ Several optimizations were conducted for the parallelization process, including 
 
 
 # Discussion
+Firstly, we note that time to convergence is significantly higher when not using a pre-trained model, as described in the aforementioned sections. Based on the current architecture, the model for both the fully-supervised and semi-supervised approaches have yet to converge with mediocre training and testing accuracies after 1000 iterations, taking more than 3h on a g3.8xlarge instance, especially since most deep classifiers require thousands of iterations for convergence from scratch. We have also experimented with a more balanced dataset by restricting the number of labeled flooded and non-flooded images to be the same. Notably, we did achieve significant results on the fully-supervised model with a more simplified architecture (3 convolutional layers with kernel size of 5 by 5 and reducing the number of channels along the layers) where testing accuracy reaches a peak of around 80% after 200 iterations on a balanced dataset with baseline random accuracy of 50%.
+
+Secondly, the weak scaling experiments for both fully and semi-supervised models corroborate the hypothesis that computational time increases with the data size for both training and testing as shown in **Figures 4 and 5** below where the average epoch time (across 5 epochs) is plotted against the fraction of dataset used for training and testing. The fraction of dataset used for the semi-supervised model is half (10%, 20%, 30%, 50% of total dataset) of that used by the fully-supervised version (25%, 50%, 75%, 100% of total dataset) for computational time experiment purposes since the number of unlabeled images are more than the labeled images. 
+
+**Figure 4: Weak Scaling for Fully-Supervised Model**<br/>
+![](figs/fig4.png)
+
+**Figure 5: Weak Scaling for Semi-Supervised Model**<br/>
+![](figs/fig5.png)
+
+Thirdly, the strong scaling experiments indicated that the theoretical speed-ups were clearly not achieved, due to significant overheads from GPU-CPU communication amongst others. The average epoch time against the number of GPUs used for the fully and semi-supervised models are shown in **Figures 6 and 7** below. It is observed that using 1 GPU leads to lower average epoch time when using no GPUs, indicating that GPU acceleration speed-up outweighs the overheads. However, increasing to 2 GPUs resulted in higher average epoch time, with the semi-supervised version exceeding the time without GPUs. This could be due to better optimization in the no GPU case where tensorflow could have better leveraged the 32 vCPUs, thereby not optimally representing a baseline version without GPU. Another potential explanation to the smaller speed-up when using 1 GPU is due to the experiments only averaging across 5 epochs. The first initial epoch requires significantly more time for data transfer and optimization when using GPUs, therefore indicating that averaging over more epochs may result in higher speed-ups when using GPUs compared to the no-GPU scenario.
+
+**Figure 6: Strong Scaling for Fully-Supervised Model**<br/>
+![](figs/fig6.png)
+
+**Figure 7: Strong Scaling for Semi-Supervised Model**<br/>
+![](figs/fig7.png)
+
+# Conclusion and Future Work
+
+In conclusion, 
+
 goals achieved, improvements suggested, lessons learnt, future work, interesting insights
+
+
 
 future work: Use Tensorboard for GPU analysis...
 
-semisupervised weak scaling for [0.1,0.2,0.3,0.5] % of total dataset: 
-Weak Scaling Times: [6.167605590820313, 18.977311420440675, 40.378678464889525, 100.61357822418213]
 
 Time for 0 GPUs: 212.20314750671386
 Time for 1 GPUs: 202.24078855514526
