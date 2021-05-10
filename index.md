@@ -103,14 +103,9 @@ Thirdly, the strong scaling experiments indicated that the theoretical speed-ups
 
 # Conclusion and Future Work
 
-In conclusion, 
+In conclusion, we have successfully implemented a deep image classifier for flood disaster management using both a fully-supervised approach and a semi-supervised model. We have also gleaned insightful observations on the various mechanisms involved in Tensorflow's interface and interactions with accelerated GPU computing. Weak scaling is corroborated where computational times are higher along with increasing training and testing datasets. On the other hand, the results from strong scaling are different from the theoretical expectations due to significant GPU-CPU communication overheads and averaging over a small number of epochs.
 
-goals achieved, improvements suggested, lessons learnt, future work, interesting insights
-
-
-
-future work: Use Tensorboard for GPU analysis...
-
+Future work entails leveraging Tensorboard for better insight into GPU analysis in terms of time spent on GPU computations, GPU-CPU communications and potentially better optimizing the allocation of computations to multiple GPUs. Moreover, it would also be worth exploring different CNN architectures or parallelizing deployment of pre-trained models for better model convergence.
 
 
 # Citations
